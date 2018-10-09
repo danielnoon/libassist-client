@@ -1,3 +1,27 @@
-<h1>
-  Hello, World!
-</h1>
+<input id="val" placeholder="Replacement 1 Value"><br>
+<button onclick="send()">Test</button>
+<script>
+
+  const { ipcRenderer } = require('electron');
+
+  const currentLocation = "C:\\Users\\delpi\\Documents\\libassist-format\\examples\\example1";
+
+  function send() {
+    const data = {
+      "Project": "Node.js",
+      "Type": "node",
+      "Name": "Example1",
+      "Example": "e1",
+      "File": "test.js",
+      "Replace": [
+        {
+          "Id": "log",
+          "Value": document.getElementById("val").value
+        }
+      ]
+    }
+
+    ipcRenderer.send('buildExample', data, currentLocation);
+  }
+
+</script>

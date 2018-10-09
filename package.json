@@ -3,17 +3,27 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/app.js",
+  "bin": {
+    "ladoc": "dist/cli.js"
+  },
   "scripts": {
     "start": "electron .",
+    "doc": "node dist/cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/ncp": "^2.0.1",
+    "@types/node": "^10.11.4",
+    "@types/tempy": "^0.1.0",
     "@types/vinyl": "^2.0.2",
+    "commander": "^2.18.0",
     "electron": "^3.0.3",
     "gulp": "^3.9.1",
     "gulp-typescript": "^5.0.0-alpha.3",
+    "ncp": "^2.0.0",
+    "tempy": "^0.2.1",
     "typescript": "^3.1.1"
   }
 }
