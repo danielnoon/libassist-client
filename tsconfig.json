@@ -57,8 +57,10 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "exclude": [
-    "./dist",
+    "./dist/",
     "./gulpfile.js",
-    "./node_modules"
+    "./node_modules/",
+    "./src/app/",
+    "./webpack.config.js"
   ]
 }

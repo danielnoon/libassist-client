@@ -1,0 +1,14 @@
+.title {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* position: absolute; */
+  padding-left: 10px;
+  position: absolute;
+  z-index: 1;
+}
+
+.accordion {
+  padding-top: 5em;
+  display: block;
+  position: relative;
+  z-index: 2;
+}

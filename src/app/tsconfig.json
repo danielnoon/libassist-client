@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "lib": [ "es2015", "dom" ],
+    "suppressImplicitAnyIndexErrors": true,
+    "strictPropertyInitialization": false
+  }
+}

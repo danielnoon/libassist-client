@@ -1,12 +1,14 @@
 interface Options {
   Project: string;
   Type: string;
-  Name: string,
-  Example: string,
-  File: string,
+  Template: string;
+  Name: string;
+  Example: string;
+  File: string;
+  Ports: string[];
   Replace: {
-    Id: string,
-    Value: string
+    Id: string;
+    Value: string;
   }[]
 }
 

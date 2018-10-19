@@ -1,0 +1,25 @@
+import { NgModule } from "@angular/core";
+import { MaterialComponentsModule } from "./material-components.module";
+import { SidebarComponent } from "./sidebar/sidebar.component";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MainComponent } from "./main/main.component";
+import { MarkdownModule } from "ngx-markdown";
+import { ExampleComponent } from "./example/example.component";
+import { HighlightModule } from "ngx-highlightjs";
+// import { HighlightModule } from 'ngx-highlightjs';
+
+const components: any[] = [SidebarComponent, MainComponent, ExampleComponent]
+
+@NgModule({
+  declarations: components,
+  exports: components,
+  imports: [
+    MaterialComponentsModule,
+    CommonModule,
+    FormsModule,
+    MarkdownModule,
+    HighlightModule
+  ]
+})
+export class ComponentsModule {}

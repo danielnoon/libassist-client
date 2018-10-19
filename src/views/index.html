@@ -1,27 +1,58 @@
-<input id="val" placeholder="Replacement 1 Value"><br>
-<button onclick="send()">Test</button>
-<script>
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
 
-  const { ipcRenderer } = require('electron');
+<body>
+  
+  <app-main>Loading...</app-main>
+  <script src="bundle.js"></script>
 
-  const currentLocation = "C:\\Users\\delpi\\Documents\\libassist-format\\examples\\example1";
+</body>
 
-  function send() {
-    const data = {
-      "Project": "Node.js",
-      "Type": "node",
-      "Name": "Example1",
-      "Example": "e1",
-      "File": "test.js",
-      "Replace": [
-        {
-          "Id": "log",
-          "Value": document.getElementById("val").value
-        }
-      ]
+
+
+<!-- <pre>
+    <code class="language-javascript">
+app.get("/", (req, res) => res.send(`
+<textarea id="val" placeholder="HTML"></textarea>
+`));
+  </code>
+  </pre>
+
+  <textarea id="example-e1"></textarea>
+
+  <button onclick="send()">Test</button> -->
+
+  <!-- <script>
+
+    const { ipcRenderer } = require('electron');
+
+    const currentLocation = "C:\\Users\\delpi\\Documents\\libassist-format\\examples\\example1";
+
+    function send() {
+      const data = {
+        "Project": "Node.js",
+        "Type": "node",
+        "Name": "Example1",
+        "Example": "e1",
+        "File": "test.js",
+        "Ports": ["3000:3000"],
+        "Replace": [
+          {
+            "Id": "html",
+            "Value": document.querySelector("#val").value
+          }
+        ]
+      }
+
+      ipcRenderer.send('buildExample', data, currentLocation);
     }
 
-    ipcRenderer.send('buildExample', data, currentLocation);
-  }
+    ipcRenderer.on('exampleOutput', (sender, message, example, ok) => {
+      document.querySelector("#example-" + example).value += message;
+    });
 
-</script>
+  </script> -->

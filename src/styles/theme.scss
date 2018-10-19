@@ -1,0 +1,81 @@
+@import '../../node_modules/@angular/material/theming';
+
+@include mat-core();
+
+$la-app-primary: mat-palette($mat-purple);
+$la-app-accent:  mat-palette($mat-indigo);
+
+$la-app-light-theme: mat-light-theme($la-app-primary, $la-app-accent);
+$la-app-dark-theme: mat-dark-theme($la-app-primary, $la-app-accent);
+
+th, td, table {
+  padding: 10px;
+  border-style: solid;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.app.light-theme {
+  @include angular-material-theme($la-app-light-theme);
+  background-color: #ececec;
+  color: rgba(0, 0, 0, .95);
+  ::-webkit-scrollbar {
+    width: 5px;
+    transition: 200ms;
+  }
+
+  ::-webkit-scrollbar-track {
+    opacity: 0;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(145, 145, 145, 0.15);
+    opacity: 0;
+    border-radius: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(145, 145, 145, 0.75);
+    opacity: 1;
+  }
+
+  th, td, table {
+    border-color: rgba(145, 145, 145, 1);
+  }
+  @import '../../node_modules/highlightjs/styles/atelier-forest-light';
+}
+
+.app.dark-theme {
+  @include angular-material-theme($la-app-dark-theme);
+  background-color: #2c2c2c;
+  color: rgba(255, 255, 255, .95);
+  ::-webkit-scrollbar {
+    width: 5px;
+    transition: 200ms;
+  }
+  ::-webkit-scrollbar:hover {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    opacity: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, .15);
+    border-radius: 100px;
+    transition: 200ms;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 100, 100, .75);
+  }
+  th, td, table {
+    border-color: rgba(100, 100, 100, 1);
+  }
+  @import '../../node_modules/highlightjs/styles/atelier-forest-dark';
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
