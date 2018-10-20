@@ -1,4 +1,4 @@
 <div class="app" [ngClass]="theme">
   <app-sidebar [state]="state" (select)="chooseSection($event)"></app-sidebar>
-  <app-main-area [section]="currentSection"></app-main-area>
+  <app-main-area [section]="currentSection" [workingDir]="workingDir"></app-main-area>
 </div>

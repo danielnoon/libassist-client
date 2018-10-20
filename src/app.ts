@@ -48,7 +48,7 @@ app.on("ready", () => {
   win.loadFile(__dirname + "/views/index.html");
 });
 
-ipcMain.on('buildExample', async (event: Event, options: Options, workingDir: string) => {
+ipcMain.on('runExample', async (event: Event, options: Options, workingDir: string) => {
   console.log(options, workingDir);
   const name = await build(options, workingDir);
   console.log(name);

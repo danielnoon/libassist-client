@@ -4,7 +4,7 @@
     <div *ngFor="let part of section.content">
       <markdown *ngIf="part.type == 'markdown'" [data]="part.value"></markdown>
       <div *ngIf="part.type == 'example'">
-        <app-example [example]="part.value"></app-example>
+        <app-example [example]="part.value" [project]="section.title" [workingDir]="workingDir"></app-example>
       </div>
     </div>
   </mat-card-content>

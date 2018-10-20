@@ -8,4 +8,5 @@ import { Section } from "../../../models/state.model";
 })
 export class MainComponent {
   @Input() section: Section;
+  @Input() workingDir: string;
 }

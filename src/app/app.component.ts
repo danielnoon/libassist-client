@@ -13,7 +13,8 @@ export class AppComponent implements OnInit {
       {
         name: "Ionic",
         description: "Cross-platform component library",
-        path: 'C:\\Users\\delpi\\Documents\\libassist-format\\examples\\example1',
+        path: 'D:\\code\\libassist-format\\examples\\example1',
+        // path: 'C:\\Users\\delpi\\Documents\\libassist-format\\examples\\example1',
         sections: [
           {
             title: "Action Sheet",
@@ -162,10 +163,11 @@ This attribute lets you specify how wide the button should be. By default, butto
         ]
       }
     ]
-  }
+  };
 
   currentSection: Section;
   theme: string = 'light-theme';
+  workingDir: string = '';
 
   constructor(private electron: ElectronService, private ref: ChangeDetectorRef) {
     console.log("WHAT");
@@ -190,5 +192,6 @@ This attribute lets you specify how wide the button should be. By default, butto
 
   chooseSection(selection: number[]) {
     this.currentSection = this.state.libs[selection[0]].sections[selection[1]];
+    this.workingDir = this.state.libs[selection[0]].path;
   }
 }

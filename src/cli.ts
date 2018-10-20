@@ -35,13 +35,15 @@ async function build(options: Options, workingDir: string) {
   const tmp = tempy.directory();
   await copy(p, tmp);
   console.log("copied!");
-  let edit = fs.readFileSync(path.resolve(tmp, options.File), 'utf-8');
-  for (let replacement of options.Replace) {
-    const interp = `{{%la:${replacement.Id}}}`;
-    edit = edit.replace(interp, replacement.Value);
+  for (let file of options.Files) {
+    let edit = fs.readFileSync(path.resolve(tmp, file.Path), 'utf-8');
+    for (let replacement of file.Replacements) {
+      const interp = `{{%la:${replacement.Id}}}`;
+      edit = edit.replace(interp, replacement.Value);
+    }
+    fs.writeFileSync(path.resolve(tmp, file.Path), edit, 'utf-8');
+    console.log("written: " + file.Path);
   }
-  fs.writeFileSync(path.resolve(tmp, options.File), edit, 'utf-8');
-  console.log("written!");
   const dockerName = `ladoc/${options.Name.toLowerCase()}-${options.Example.toLowerCase()}`;
   const dockerBuild = spawn("docker", ["build", "-t", dockerName, tmp]);
   dockerBuild.stdout.on("message", data => {
