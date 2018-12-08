@@ -22,11 +22,13 @@ gulp.task("templates", function() {
 
 gulp.task("client", function() {
   return gulp.src('src/app/main.js')
+    // @ts-ignore
     .pipe(webpack(require('./webpack.config.js')))
     .pipe(gulp.dest('dist/views/'));
 });
 
 gulp.task("client:watch", function() {
+  // @ts-ignore
   gulp.watch('src/app/**/*.*', ["client"]);
 });
 
@@ -41,4 +43,5 @@ gulp.task('copy-highlight', function() {
     .pipe(gulp.dest('./dist/views/highlight'));
 });
 
+// @ts-ignore
 gulp.task("default", ["tsc", "views", "copy-highlight", "client", "styles"]);

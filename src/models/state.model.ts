@@ -15,7 +15,10 @@ export interface Example {
   name: string;
   example: string;
   files: ExampleFile[];
-  ports?: string[];
+  ports?: string;
+  [key: string]: string | any;
+  running: boolean;
+  template: string | null;
 }
 
 export interface ContentPart {
@@ -26,6 +29,7 @@ export interface ContentPart {
 export interface Section {
   title: string;
   content: ContentPart[];
+  [key: string]: string | any;
 }
 
 export interface Library {
@@ -34,6 +38,7 @@ export interface Library {
   path: string;
   sections: Section[];
   opened?: boolean;
+  [key: string]: string | any;
 }
 
 export default interface State {

@@ -1,11 +1,20 @@
-<mat-card class="content-card">
+<mat-card class="content-card" *ngIf="section">
   <mat-card-title>{{section.title}}</mat-card-title>
   <mat-card-content>
-    <div *ngFor="let part of section.content">
-      <markdown *ngIf="part.type == 'markdown'" [data]="part.value"></markdown>
-      <div *ngIf="part.type == 'example'">
-        <app-example [example]="part.value" [project]="section.title" [workingDir]="workingDir"></app-example>
+    <div>
+      <div *ngFor="let part of section.content">
+        <markdown *ngIf="part.type == 'markdown'" [data]="part.value"></markdown>
+        <div *ngIf="part.type == 'example'">
+          <app-example [example]="part.value" [project]="section.title" [workingDir]="workingDir"></app-example>
+        </div>
       </div>
     </div>
   </mat-card-content>
 </mat-card>
+
+<div *ngIf="!section" class="section-placeholder">
+  <div class="placeholder-inner">
+    <h1>LibAssist</h1>
+    <p>Choose a section on the left.</p>
+  </div>
+</div>

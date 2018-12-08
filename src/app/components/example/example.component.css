@@ -1,0 +1,22 @@
+.example-wrapper {
+  margin: 20px 0;
+  background-color: var(--example-background);
+  border-radius: 2px;
+}
+
+.file-wrapper {
+  padding: 10px 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.console {
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 1em;
+  height: 10em;
+  overflow-y: scroll;
+  background: black;
+}

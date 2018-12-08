@@ -1,17 +1,41 @@
-<div class="file-wrapper" *ngFor="let file of example.files">
-  <pre>
-      <code highlight [code]="concatCode(file)" [language]="[file.language]"></code>
-  </pre>
-  <div class="inputs">
-    <mat-form-field *ngFor="let input of filterForInputs(file)">
-      <mat-label>{{input.id}}</mat-label>
-      <textarea matInput
-          [(ngModel)]="input.value"
-          cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize"
-          cdkAutosizeMinRows="2"
-          cdkAutosizeMaxRows="5"></textarea>
-      </mat-form-field>
+<div class="example-wrapper">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>Example: {{example.name}}</span>
+      <span class="spacer"></span>
+      <button mat-icon-button [disabled]="example.running" (click)="runExample()">
+        <i class="material-icons">
+          play_arrow
+        </i>
+      </button>
+      <button mat-icon-button [disabled]="!example.running" (click)="runExample()">
+        <i class="material-icons">
+          stop
+        </i>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-tab-group>
+    <mat-tab *ngFor="let file of example.files" [label]="file.path">
+      <div class="file-wrapper">
+        <pre>
+          <code highlight [code]="concatCode(file)" [language]="[file.language]"></code>
+        </pre>
+        <div class="inputs">
+          <mat-form-field *ngFor="let input of filterForInputs(file)">
+          <mat-label>{{input.id}}</mat-label>
+          <textarea matInput
+              [(ngModel)]="input.value"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="5"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <div class="console">
+    {{consoleBuffer}}
   </div>
-  <button mat-button (click)="runExample()">RUN</button>
 </div>

@@ -44,7 +44,7 @@ async function build(options: Options, workingDir: string) {
     fs.writeFileSync(path.resolve(tmp, file.Path), edit, 'utf-8');
     console.log("written: " + file.Path);
   }
-  const dockerName = `ladoc/${options.Name.toLowerCase()}-${options.Example.toLowerCase()}`;
+  const dockerName = `ladoc/${options.Project.toLowerCase()}-${options.Example.toLowerCase()}`;
   const dockerBuild = spawn("docker", ["build", "-t", dockerName, tmp]);
   dockerBuild.stdout.on("message", data => {
     console.log(data);

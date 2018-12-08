@@ -5,12 +5,15 @@ import { ElectronService } from "ngx-electron";
 
 @Component({
   selector: 'app-example',
-  templateUrl: 'example.component.html'
+  templateUrl: 'example.component.html',
+  styleUrls: ['./example.component.css']
 })
 export class ExampleComponent {
   @Input() example: Example;
   @Input() project: string;
   @Input() workingDir: string;
+  consoleBuffer = "";
+  processName = "";
 
   constructor(private electron: ElectronService) {}
 
@@ -31,13 +34,17 @@ export class ExampleComponent {
   }
 
   runExample() {
+    if (this.example.running) {
+      return 1;
+    }
+
     const options: Options = {
       Project: this.project,
       Type: this.example.type,
       Template: 'none',
       Name: this.example.name,
-      Ports: this.example.ports || [],
-      Example: this.example.example,
+      Ports: (this.example.ports || "").split(','),
+      Example: this.example.path,
       Files: []
     };
 
@@ -51,5 +58,28 @@ export class ExampleComponent {
     }
 
     this.electron.ipcRenderer.send('runExample', options, this.workingDir);
+    this.consoleBuffer = "Building...\n";
+
+    this.electron.ipcRenderer.once(`exampleBuilt${options.Name}${options.Project}`,
+      (e: Event, name: string) => {
+        console.log(this.processName);
+      this.processName = name;
+      this.consoleBuffer += `Running ${name}...\n`;
+    })
+
+    this.electron.ipcRenderer.on(`exampleOutput${options.Name}${options.Project}`, 
+      (e: Event, data: string, example: string, ok: boolean) => {
+      this.consoleBuffer += data;
+    });
+    
+    this.example.running = true;
+  }
+
+  stopExample() {
+    console.log(this.processName);
+    this.electron.ipcRenderer.send('stopExample', this.processName);
+    this.electron.ipcRenderer.once(`stoppedExample${this.processName}`, (event: Event) => {
+      this.example.running = false;
+    });
   }
 }
