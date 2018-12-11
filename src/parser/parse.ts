@@ -169,7 +169,7 @@ export default class Parser {
       example: '',
       files: [],
       running: false,
-      template: null
+      template: 'custom'
     }
   }
 

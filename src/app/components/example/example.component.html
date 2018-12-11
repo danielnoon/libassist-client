@@ -17,10 +17,10 @@
   </mat-toolbar>
   <mat-tab-group>
     <mat-tab *ngFor="let file of example.files" [label]="file.path">
+      <pre class="code-wrapper">
+        <code class="code" highlight [code]="concatCode(file)" [language]="[file.language]"></code>
+      </pre>
       <div class="file-wrapper">
-        <pre>
-          <code highlight [code]="concatCode(file)" [language]="[file.language]"></code>
-        </pre>
         <div class="inputs">
           <mat-form-field *ngFor="let input of filterForInputs(file)">
           <mat-label>{{input.id}}</mat-label>

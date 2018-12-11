@@ -41,7 +41,7 @@ export class ExampleComponent {
     const options: Options = {
       Project: this.project,
       Type: this.example.type,
-      Template: 'none',
+      Template: this.example.template,
       Name: this.example.name,
       Ports: (this.example.ports || "").split(','),
       Example: this.example.path,

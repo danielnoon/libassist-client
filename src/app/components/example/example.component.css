@@ -20,3 +20,11 @@
   overflow-y: scroll;
   background: black;
 }
+
+.code-wrapper {
+  margin: 0;
+}
+
+.code {
+  padding: 1em;
+}

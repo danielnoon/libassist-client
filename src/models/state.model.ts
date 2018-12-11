@@ -18,7 +18,7 @@ export interface Example {
   ports?: string;
   [key: string]: string | any;
   running: boolean;
-  template: string | null;
+  template: string;
 }
 
 export interface ContentPart {
