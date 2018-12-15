@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/views",
+    "types": [],
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "lib": [ "es2015", "dom" ],
+    "suppressImplicitAnyIndexErrors": true,
+    "strictPropertyInitialization": false
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

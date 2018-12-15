@@ -8,7 +8,19 @@ import path from 'path';
 console.log("Starting!");
 
 let win: BrowserWindow;
-let runningExamples = [];
+// let runningExamples = [];
+const args = process.argv.slice(1);
+const serve = args.some(val => val === '--serve');
+
+function openDoc() {
+  const path = dialog.showOpenDialog({
+    properties: ['openFile'], filters: [{extensions: ['ladoc'], name: "LibAssist Documentation"}]
+  });
+  if (path[0]) {
+    const document = parse(path[0]);
+    win.webContents.send('openLaFile', document);
+  }
+}
 
 app.on("ready", () => {
   win = new BrowserWindow();
@@ -19,11 +31,7 @@ app.on("ready", () => {
         {
           label: "Open",  
           click() {
-            const path = dialog.showOpenDialog({
-              properties: ['openFile'], filters: [{extensions: ['ladoc'], name: "LibAssist Documentation"}]
-            });
-            const document = parse(path[0]);
-            win.webContents.send('openLaFile', document);
+            openDoc();
           },
           accelerator: "CommandOrControl+o"
         }
@@ -49,10 +57,18 @@ app.on("ready", () => {
   ]);
   globalShortcut.register('CommandOrControl+Shift+I', () => {
     win.webContents.toggleDevTools();
-  })
+  });
   win.setTitle("LibAssist");
   Menu.setApplicationMenu(menu);
-  win.loadFile(__dirname + "/views/index.html");
+  if (serve) {
+    // require('electron-reload')(__dirname, {
+    //   electron: require(`${__dirname}/../node_modules/electron`)
+    // });
+    win.loadURL('http://localhost:4200');
+  }
+  else {
+    win.loadFile(__dirname + "/app/index.html");
+  }
 });
 
 ipcMain.on('runExample', async (event: Event, options: Options, libFile: string) => {
@@ -83,4 +99,8 @@ ipcMain.on('stopExample', async (event: Event, image: string) => {
   const command = `docker rm $(docker stop $(docker ps -a -q --filter ancestor=${image} --format="{{.ID}}"))`;
   const kill = spawn(command);
   kill.on('exit', () => console.log("Exited!"));
+});
+
+ipcMain.on('openDoc', () => {
+  openDoc();
 });

@@ -5,7 +5,7 @@ import { ElectronService } from 'ngx-electron';
 @Component({
   selector: 'app-main',
   templateUrl: 'app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   state: State = {
@@ -36,7 +36,14 @@ export class AppComponent implements OnInit {
   }
 
   pushLib(lib: Library) {
-    this.state.libs.push(lib);
+    let match = -1;
+    this.state.libs.forEach((lib_, i) => {
+      if (lib_.package === lib.package) {
+        match = i;
+      }
+    });
+    if (match >= 0) this.state.libs[match] = lib;
+    else this.state.libs.push(lib);
     console.log(lib);
   }
 

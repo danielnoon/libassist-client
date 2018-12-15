@@ -6,7 +6,7 @@ import { ElectronService } from "ngx-electron";
 @Component({
   selector: 'app-example',
   templateUrl: 'example.component.html',
-  styleUrls: ['./example.component.css']
+  styleUrls: ['./example.component.scss']
 })
 export class ExampleComponent {
   @Input() example: Example;
@@ -14,6 +14,7 @@ export class ExampleComponent {
   @Input() workingDir: string;
   consoleBuffer = "";
   processName = "";
+
 
   constructor(private electron: ElectronService) {}
 
@@ -29,8 +30,7 @@ export class ExampleComponent {
   }
 
   filterForInputs(file: ExampleFile) {
-    const filtered = file.content.filter(part => part.type.match('input'));
-    return filtered;
+    return file.content.filter(part => part.type.match('input'));
   }
 
   runExample() {
@@ -65,10 +65,11 @@ export class ExampleComponent {
         console.log(this.processName);
       this.processName = name;
       this.consoleBuffer += `Running ${name}...\n`;
-    })
+    });
 
     this.electron.ipcRenderer.on(`exampleOutput${options.Name}${options.Project}`, 
       (e: Event, data: string, example: string, ok: boolean) => {
+      console.log(example, ok);
       this.consoleBuffer += data;
     });
     
@@ -78,7 +79,7 @@ export class ExampleComponent {
   stopExample() {
     console.log(this.processName);
     this.electron.ipcRenderer.send('stopExample', this.processName);
-    this.electron.ipcRenderer.once(`stoppedExample${this.processName}`, (event: Event) => {
+    this.electron.ipcRenderer.once(`stoppedExample${this.processName}`, () => {
       this.example.running = false;
     });
   }

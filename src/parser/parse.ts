@@ -3,7 +3,7 @@ import { Library, Section, Example, ExampleFile } from "../models/state.model";
 export default class Parser {
   private library: Library;
   private stack: string[] = [];
-  private path: string;
+  private readonly path: string;
 
   constructor(path: string, ladoc?: string) {
     this.path = path;
@@ -18,8 +18,7 @@ export default class Parser {
       .map(line => line.replace(/[\n\r]/g, ''))
       .filter((val, i, arr) => {
         if (val === '') {
-          if (arr[i + 1] === '') return true;
-          else return false;
+          return arr[i + 1] === '';
         }
         else return true;
       });
@@ -69,7 +68,7 @@ export default class Parser {
                 path: meta[1],
                 language: meta[0],
                 content: []
-              }
+              };
               let fileContents = this.getFile(lines);
               console.log(fileContents);
               let contents = this.findReplacements(fileContents);
@@ -131,7 +130,7 @@ export default class Parser {
   }
 
   private findReplacements(file: string) {
-    const regex = /{{(\%la:)([^{}]*)}}/g;
+    const regex = /{{(%la:)([^{}]*)}}/g;
     const replacements: string[] = [];
     let firstIndex = -1;
     let execArray: RegExpExecArray | null;
@@ -152,6 +151,7 @@ export default class Parser {
       description: "",
       path: this.path,
       sections: [],
+      package: ""
     }
   }
 

@@ -1,7 +1,5 @@
 const gulp = require("gulp");
 const ts = require("gulp-typescript");
-const webpack = require('webpack-stream');
-const sass = require('gulp-sass');
 const tsProject = ts.createProject("tsconfig.json");
 
 gulp.task("tsc", function() {
@@ -10,38 +8,8 @@ gulp.task("tsc", function() {
   .js.pipe(gulp.dest("dist"));
 });
 
-gulp.task("views", function() {
-  return gulp.src("./src/views/**/*.*")
-  .pipe(gulp.dest("./dist/views/"));
-});
-
 gulp.task("templates", function() {
   return gulp.src("./src/templates/**/*.*")
   .pipe(gulp.dest("./dist/templates/"));
 });
-
-gulp.task("client", function() {
-  return gulp.src('src/app/main.js')
-    // @ts-ignore
-    .pipe(webpack(require('./webpack.config.js')))
-    .pipe(gulp.dest('dist/views/'));
-});
-
-gulp.task("client:watch", function() {
-  // @ts-ignore
-  gulp.watch('src/app/**/*.*', ["client"]);
-});
-
-gulp.task('styles', function () {
-  return gulp.src('./src/styles/**/*.scss')
-    .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('./dist/views/styles'));
-});
-
-gulp.task('copy-highlight', function() {
-  return gulp.src(['./node_modules/highlightjs/highlight.*', './node_modules/highlightjs/styles/*.*'])
-    .pipe(gulp.dest('./dist/views/highlight'));
-});
-
-// @ts-ignore
-gulp.task("default", ["tsc", "views", "copy-highlight", "client", "styles"]);
+exports.default = gulp.parallel("tsc", "templates");

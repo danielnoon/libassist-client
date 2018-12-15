@@ -45,7 +45,7 @@ th, td, table {
   th, td, table {
     border-color: rgba(145, 145, 145, 1);
   }
-  @import '../../node_modules/highlightjs/styles/atelier-forest-light';
+  @import '../../node_modules/highlightjs/styles/atelier-forest-light.css';
 }
 
 .app.dark-theme {
@@ -75,7 +75,7 @@ th, td, table {
   th, td, table {
     border-color: rgba(100, 100, 100, 1);
   }
-  @import '../../node_modules/highlightjs/styles/atelier-forest-dark';
+  @import '../../node_modules/highlightjs/styles/atelier-forest-dark.css';
 }
 
 body, html {

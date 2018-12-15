@@ -8,7 +8,7 @@
           play_arrow
         </i>
       </button>
-      <button mat-icon-button [disabled]="!example.running" (click)="runExample()">
+      <button mat-icon-button [disabled]="!example.running" (click)="stopExample()">
         <i class="material-icons">
           stop
         </i>
@@ -17,22 +17,23 @@
   </mat-toolbar>
   <mat-tab-group>
     <mat-tab *ngFor="let file of example.files" [label]="file.path">
-      <pre class="code-wrapper">
-        <code class="code" highlight [code]="concatCode(file)" [language]="[file.language]"></code>
-      </pre>
-      <div class="file-wrapper">
-        <div class="inputs">
-          <mat-form-field *ngFor="let input of filterForInputs(file)">
-          <mat-label>{{input.id}}</mat-label>
-          <textarea matInput
-              [(ngModel)]="input.value"
-              cdkTextareaAutosize
-              #autosize="cdkTextareaAutosize"
-              cdkAutosizeMinRows="2"
-              cdkAutosizeMaxRows="5"></textarea>
-          </mat-form-field>
-        </div>
-      </div>
+      <
+      <!--<pre class="code-wrapper">-->
+        <!--<code class="code" highlight [code]="concatCode(file)" [language]="[file.language]"></code>-->
+      <!--</pre>-->
+      <!--<div class="file-wrapper">-->
+        <!--<div class="inputs">-->
+          <!--<mat-form-field *ngFor="let input of filterForInputs(file)">-->
+          <!--<mat-label>{{input.id}}</mat-label>-->
+          <!--<textarea matInput-->
+              <!--[(ngModel)]="input.value"-->
+              <!--cdkTextareaAutosize-->
+              <!--#autosize="cdkTextareaAutosize"-->
+              <!--cdkAutosizeMinRows="2"-->
+              <!--cdkAutosizeMaxRows="5"></textarea>-->
+          <!--</mat-form-field>-->
+        <!--</div>-->
+      <!--</div>-->
     </mat-tab>
   </mat-tab-group>
   <div class="console">

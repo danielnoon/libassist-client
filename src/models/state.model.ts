@@ -38,6 +38,7 @@ export interface Library {
   path: string;
   sections: Section[];
   opened?: boolean;
+  package: string;
   [key: string]: string | any;
 }
 
