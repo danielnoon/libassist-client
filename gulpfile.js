@@ -9,7 +9,7 @@ gulp.task("tsc", function() {
 });
 
 gulp.task("templates", function() {
-  return gulp.src("./src/templates/**/*.*")
+  return gulp.src("./src/templates/**/*")
   .pipe(gulp.dest("./dist/templates/"));
 });
 exports.default = gulp.parallel("tsc", "templates");

@@ -1,11 +1,12 @@
 <mat-card class="content-card" *ngIf="section">
+  <h6>{{project.name}}</h6>
   <mat-card-title>{{section.title}}</mat-card-title>
   <mat-card-content>
     <div>
       <div *ngFor="let part of section.content">
         <markdown *ngIf="part.type == 'markdown'" [data]="part.value"></markdown>
         <div *ngIf="part.type == 'example'">
-          <app-example [example]="part.value" [project]="section.title" [workingDir]="workingDir"></app-example>
+          <app-example [example]="part.value" [project]="project.package" [workingDir]="workingDir"></app-example>
         </div>
       </div>
     </div>

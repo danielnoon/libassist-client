@@ -6,6 +6,7 @@ import { ComponentsModule } from './components/components.module';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { NgxElectronModule } from 'ngx-electron';
 import { HighlightModule } from 'ngx-highlightjs';
+import { MonacoEditorModule } from 'ngx-monaco';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { HighlightModule } from 'ngx-highlightjs';
     NgxElectronModule,
     HighlightModule.forRoot({
       path: 'highlight'
-    })
+    }),
+    MonacoEditorModule.forRoot()
   ],
   bootstrap: [
     AppComponent

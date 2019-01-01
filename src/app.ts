@@ -1,14 +1,20 @@
 import { app, BrowserWindow, ipcMain, Event, Menu, globalShortcut, dialog } from 'electron';
-import { spawn } from 'child_process';
+import { ChildProcess, spawn } from 'child_process';
 import build from './cli';
-import Options from './models/options.model';
 import parse from './parser';
 import path from 'path';
+import { Example } from "./models/library.model";
 
 console.log("Starting!");
 
+interface IRunningProcess {
+  process: ChildProcess | null;
+  state: number;
+  name: string;
+}
+
 let win: BrowserWindow;
-// let runningExamples = [];
+let runningExamples: IRunningProcess[] = [];
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
 
@@ -61,9 +67,6 @@ app.on("ready", () => {
   win.setTitle("LibAssist");
   Menu.setApplicationMenu(menu);
   if (serve) {
-    // require('electron-reload')(__dirname, {
-    //   electron: require(`${__dirname}/../node_modules/electron`)
-    // });
     win.loadURL('http://localhost:4200');
   }
   else {
@@ -71,34 +74,63 @@ app.on("ready", () => {
   }
 });
 
-ipcMain.on('runExample', async (event: Event, options: Options, libFile: string) => {
-  const workingDir = path.parse(libFile).dir;
+function kill(image: string) {
+  const ex = runningExamples.filter(example => example.name === image)[0];
+  if (ex) {
+    if (ex.state >= 2) {
+      const command = `docker rm $(docker stop $(docker ps -a -q --filter ancestor=${image} --format="{{.ID}}"))`;
+      const kill = spawn(command);
+      kill.on('exit', () => console.log("Exited!"));
+    }
+    ex.state = -1;
+  }
+  win.webContents.send(`stoppedExample${image}`);
+}
+
+ipcMain.on('runExample', async (event: Event, options: Example, libFile: string, project: string) => {
+  // Create the name of the Docker container which will host the example.
+  const name = `ladoc/${project.toLowerCase().replace(" ", "-")}-${options.name.toLowerCase().replace(" ", "-")}`;
+
+  // Create an object to hold the state of the Docker process.
+  const rp = {state: 0, process: null, name};
+  runningExamples.push(rp);
+
+  const workingDir = options.template === 'custom' ? path.parse(libFile).dir : __dirname + "/templates/" + options.template;
+  console.log(workingDir);
   console.log(options, workingDir);
-  const name = await build(options, workingDir);
+  await build(options, workingDir, name);
+  if (rp.state === -1) return;
+  rp.state++;
   console.log(name);
-  win.webContents.send(`exampleBuilt${options.Name}${options.Project}`, name);
+  win.webContents.send(`exampleBuilt${options.name}${project}`, name);
   const ports: string[] = [];
-  options.Ports.forEach(port => ports.push('-p', port));
+  options.ports.forEach(port => ports.push('-p', port));
   const exampleProcess = spawn("docker", ["run", ...ports, name]);
+  if (rp.state === -1) return;
+  rp.state++;
   console.log('running!');
   exampleProcess.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
-    win.webContents.send(`exampleOutput${options.Name}${options.Project}`, data, options.Example, true);
+    win.webContents.send(`exampleOutput${options.name}${project}`, data, options.path, true);
   });
   exampleProcess.stderr.on('data', (data) => {
     console.log(`stderr: ${data}`);
-    win.webContents.send(`exampleOutput${options.Name}${options.Project}`, data, options.Example, false);
+    win.webContents.send(`exampleOutput${options.name}${project}`, data, options.path, false);
   });
-  // exampleProcess.stdout.on("data", data => {
-  //   console.log("STDOUT: ", data);
-  //   win.webContents.send('exampleOutput', data);
-  // })
+  exampleProcess.once('exit', () => {
+    console.log("PROCESS ENDED: ", name);
+    win.webContents.send(`stoppedExample${name}`);
+  });
 });
 
 ipcMain.on('stopExample', async (event: Event, image: string) => {
-  const command = `docker rm $(docker stop $(docker ps -a -q --filter ancestor=${image} --format="{{.ID}}"))`;
-  const kill = spawn(command);
-  kill.on('exit', () => console.log("Exited!"));
+  kill(image);
+});
+ipcMain.on('sendStdIn', async (event: Event, name: string, message: string) => {
+  const process = runningExamples.filter(proc => proc.name === name)[0];
+  if (process) {
+
+  }
 });
 
 ipcMain.on('openDoc', () => {

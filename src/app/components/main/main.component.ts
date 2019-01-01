@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { Section } from "../../../models/state.model";
+import { Library, Section } from "../../../models/library.model";
 import { ElectronService } from "ngx-electron";
 
 @Component({
@@ -10,6 +10,7 @@ import { ElectronService } from "ngx-electron";
 export class MainComponent {
   @Input() section: Section;
   @Input() workingDir: string;
+  @Input() project: Library;
 
   constructor(private electron: ElectronService) {}
 

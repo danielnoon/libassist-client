@@ -1,4 +1,4 @@
-import { Library, Section, Example, ExampleFile } from "../models/state.model";
+import { Library, Section, Example, ExampleFile } from "../models/library.model";
 
 export default class Parser {
   private library: Library;
@@ -67,33 +67,8 @@ export default class Parser {
               const file: ExampleFile = {
                 path: meta[1],
                 language: meta[0],
-                content: []
+                code: this.getFile(lines)
               };
-              let fileContents = this.getFile(lines);
-              console.log(fileContents);
-              let contents = this.findReplacements(fileContents);
-              console.log(contents);
-              let type = contents.first;
-              let a = 0, b = 0;
-              for (let i = 0; i < contents.file.length + contents.replacements.length; i++) {
-                if (type === 0) {
-                  file.content.push({
-                    type: 'small-input',
-                    value: '',
-                    id: contents.replacements[a]
-                  });
-                  a++;
-                  type = 1;
-                }
-                else if (type === 1) {
-                  file.content.push({
-                    type: 'code',
-                    value: contents.file[b]
-                  });
-                  b++;
-                  type = 0;
-                }
-              }
               console.log(file);
               const sections = this.library.sections;
               const content = sections[sections.length - 1].content;
@@ -166,10 +141,11 @@ export default class Parser {
     return {
       type: '',
       name: '',
-      example: '',
       files: [],
       running: false,
-      template: 'custom'
+      template: 'custom',
+      ports: [],
+      path: ''
     }
   }
 
@@ -182,9 +158,10 @@ export default class Parser {
         if (line.trim() === '+++') done = true;
         else {
           const firstColon = line.indexOf(':');
-          const [key, value]: string[] = 
+          let [key, value]: any[] =
             [line.substring(0, firstColon), line.substring(firstColon + 1)]
             .map(side => side.trim());
+          if (key === 'ports') value = value.split(',');
           (<any>emptyPart)[key] = value;
         }
       }

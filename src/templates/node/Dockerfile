@@ -1,3 +1,4 @@
 FROM node:alpine
-RUN npm install
-CMD npm start
+WORKDIR /app
+COPY . .
+CMD npm install --silent && npm start

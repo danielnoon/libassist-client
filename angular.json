@@ -15,14 +15,23 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./webpack.config.js",
+              "replaceDuplicatePlugins": true
+            },
             "outputPath": "dist/app",
             "index": "src/views/index.html",
             "main": "src/app/main.ts",
             "polyfills": "src/app/polyfills.ts",
             "tsConfig": "src/app/tsconfig.app.json",
             "assets": [
+              {
+                "glob": "**/*",
+                "input": "./node_modules/monaco-editor/min/vs",
+                "output": "libs/vs"
+              }
             ],
             "styles": [
               "src/styles/theme.scss"

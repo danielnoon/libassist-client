@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
-import State, { Section, Library } from '../models/state.model';
+import IState, { Section, Library } from '../models/library.model';
 import { ElectronService } from 'ngx-electron';
+import { State } from "./State";
 
 @Component({
   selector: 'app-main',
@@ -8,11 +9,12 @@ import { ElectronService } from 'ngx-electron';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  state: State = {
+  state: IState = {
     libs: []
   };
 
   currentSection: Section;
+  currentProject: Library;
   theme: string = 'light-theme';
   workingDir: string = '';
 
@@ -50,9 +52,11 @@ export class AppComponent implements OnInit {
   changeTheme(theme: 'dark' | 'light') {
     this.theme = theme + '-theme';
     localStorage.setItem('theme', theme);
+    State.Set('theme', theme);
   }
 
   chooseSection(selection: number[]) {
+    this.currentProject = this.state.libs[selection[0]];
     this.currentSection = this.state.libs[selection[0]].sections[selection[1]];
     this.workingDir = this.state.libs[selection[0]].path;
   }

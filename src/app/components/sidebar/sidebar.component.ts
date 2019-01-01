@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import State from "../../../models/state.model";
+import IState from "../../../models/library.model";
 
 @Component({
   selector: 'app-sidebar',
@@ -7,7 +7,7 @@ import State from "../../../models/state.model";
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
-  @Input() state: State;
+  @Input() state: IState;
   @Output() select: EventEmitter<number[]> = new EventEmitter();
 
   selectItem(libIndex: number, sectionIndex: number) {

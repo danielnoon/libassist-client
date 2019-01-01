@@ -1,24 +1,23 @@
-export interface ExampleContents {
-  type: 'code' | 'small-input' | 'large-input';
-  value: string;
-  id?: string;
-}
+// export interface ExampleContents {
+//   type: 'code' | 'small-input' | 'large-input';
+//   value: string;
+//   id?: string;
+// }
 
 export interface ExampleFile {
   path: string;
   language: string;
-  content: ExampleContents[];
+  code: string;
 }
 
 export interface Example {
   type: string;
   name: string;
-  example: string;
   files: ExampleFile[];
-  ports?: string;
-  [key: string]: string | any;
+  ports: [];
   running: boolean;
   template: string;
+  path: string;
 }
 
 export interface ContentPart {
@@ -29,7 +28,6 @@ export interface ContentPart {
 export interface Section {
   title: string;
   content: ContentPart[];
-  [key: string]: string | any;
 }
 
 export interface Library {
@@ -39,9 +37,8 @@ export interface Library {
   sections: Section[];
   opened?: boolean;
   package: string;
-  [key: string]: string | any;
 }
 
-export default interface State {
+export default interface IState {
   libs: Library[]
 }

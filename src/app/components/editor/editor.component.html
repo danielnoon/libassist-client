@@ -1,0 +1,8 @@
+<div class="wrapper">
+  <ace class="editor"
+     [mode]="language"
+     [theme]="theme === 'dark' ? 'twilight' : 'github'"
+     [value]="code"
+     (valueChange)="codeChange.emit($event)">
+  </ace>
+</div>

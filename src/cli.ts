@@ -4,7 +4,7 @@ import { spawn, ChildProcess } from 'child_process';
 import * as tempy from 'tempy';
 import { ncp } from 'ncp';
 import * as fs from 'fs';
-import Options from './models/options.model';
+import { Example } from "./models/library.model";
 
 function copy(src: string, dest: string) {
   return new Promise((resolve, reject) => {
@@ -20,31 +20,14 @@ function childExit(child: ChildProcess) {
   })
 }
 
-// const pwd = process.cwd();
-
-// const options = JSON.parse(process.argv[2]);
-
-// const p = path.resolve("examples", options.Example);
-// const tmp = tempy.directory();
-
-// console.log("Example location: ", p);
-// console.log("Temporary location: ", tmp);
-
-async function build(options: Options, workingDir: string) {
-  const p = path.resolve(workingDir, "examples", options.Example);
+async function build(options: Example, workingDir: string, dockerName: string) {
+  const p = options.template === "custom" ? path.resolve(workingDir, "examples", options.path) : workingDir;
   const tmp = tempy.directory();
   await copy(p, tmp);
   console.log("copied!");
-  for (let file of options.Files) {
-    let edit = fs.readFileSync(path.resolve(tmp, file.Path), 'utf-8');
-    for (let replacement of file.Replacements) {
-      const interp = `{{%la:${replacement.Id}}}`;
-      edit = edit.replace(interp, replacement.Value);
-    }
-    fs.writeFileSync(path.resolve(tmp, file.Path), edit, 'utf-8');
-    console.log("written: " + file.Path);
+  for (let file of options.files) {
+    fs.writeFileSync(path.resolve(tmp, file.path), file.code, 'utf-8');
   }
-  const dockerName = `ladoc/${options.Project.toLowerCase()}-${options.Example.toLowerCase()}`;
   const dockerBuild = spawn("docker", ["build", "-t", dockerName, tmp]);
   dockerBuild.stdout.on("message", data => {
     console.log(data);

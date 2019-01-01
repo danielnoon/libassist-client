@@ -1,6 +1,5 @@
-import { Component, Input } from "@angular/core";
-import { Example, ExampleFile } from "../../../models/state.model";
-import Options from "../../../models/options.model";
+import { Component, ElementRef, Input, NgZone, QueryList, ViewChildren } from "@angular/core";
+import { Example } from "../../../models/library.model";
 import { ElectronService } from "ngx-electron";
 
 @Component({
@@ -14,64 +13,39 @@ export class ExampleComponent {
   @Input() workingDir: string;
   consoleBuffer = "";
   processName = "";
+  @ViewChildren('editor') editors: QueryList<ElementRef>;
 
-
-  constructor(private electron: ElectronService) {}
-
-  concatCode(file: ExampleFile) {
-    const parts = file.content.map(part => part.type === 'code' ? part.value : part.value || `{{${part.id}}}`);
-    return parts.join('');
-  }
-
-  getInterpolation(file: ExampleFile) {
-    const interp: {[key: string]: string} = {};
-    file.content.forEach(part => part.type.match('input') ? interp[part.id!] = part.value : false);
-    return interp;
-  }
-
-  filterForInputs(file: ExampleFile) {
-    return file.content.filter(part => part.type.match('input'));
-  }
+  constructor(private electron: ElectronService, private zone: NgZone) {}
 
   runExample() {
     if (this.example.running) {
       return 1;
     }
 
-    const options: Options = {
-      Project: this.project,
-      Type: this.example.type,
-      Template: this.example.template,
-      Name: this.example.name,
-      Ports: (this.example.ports || "").split(','),
-      Example: this.example.path,
-      Files: []
-    };
-
-    for (let file of this.example.files) {
-      options.Files.push({
-        Path: file.path,
-        Replacements: file.content
-          .map(contents => (contents.type !== 'code' ? {Id: contents.id!, Value: contents.value} : {Id: '', Value: ''}))
-          .filter(val => val.Id !== '')
-      });
-    }
-
-    this.electron.ipcRenderer.send('runExample', options, this.workingDir);
+    this.electron.ipcRenderer.send('runExample', this.example, this.workingDir, this.project);
     this.consoleBuffer = "Building...\n";
 
-    this.electron.ipcRenderer.once(`exampleBuilt${options.Name}${options.Project}`,
+    this.electron.ipcRenderer.once(`exampleBuilt${this.example.name}${this.project}`,
       (e: Event, name: string) => {
-        console.log(this.processName);
       this.processName = name;
-      this.consoleBuffer += `Running ${name}...\n`;
+      this.consoleBuffer += `Running ${name}...\n\n`;
+      this.electron.ipcRenderer.once(`stoppedExample${this.processName}`, () => {
+        this.zone.run(() => {
+          console.log("Example no longer running.");
+          this.example.running = false;
+        })
+      });
     });
 
-    this.electron.ipcRenderer.on(`exampleOutput${options.Name}${options.Project}`, 
+    this.electron.ipcRenderer.on(`exampleOutput${this.example.name}${this.project}`,
       (e: Event, data: string, example: string, ok: boolean) => {
       console.log(example, ok);
-      this.consoleBuffer += data;
+      this.zone.run(() => {
+        this.consoleBuffer += data;
+      });
     });
+
+    console.log(this.processName);
     
     this.example.running = true;
   }
@@ -79,8 +53,5 @@ export class ExampleComponent {
   stopExample() {
     console.log(this.processName);
     this.electron.ipcRenderer.send('stopExample', this.processName);
-    this.electron.ipcRenderer.once(`stoppedExample${this.processName}`, () => {
-      this.example.running = false;
-    });
   }
 }
