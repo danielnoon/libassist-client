@@ -1,32 +1,38 @@
-import { Library, Section, Example, ExampleFile } from "../models/library.model";
+import { Library, Section, Example, ExampleFile, Include } from "./models/library.model";
+import { readFileSync } from "fs";
+import { parse, resolve } from "path";
+
+interface IncludeFile {
+  path: string;
+  length: number;
+}
 
 export default class Parser {
   private library: Library;
   private stack: string[] = [];
+  private readonly ladoc: string = '';
   private readonly path: string;
 
   constructor(path: string, ladoc?: string) {
     this.path = path;
+    if (!ladoc) {
+      this.ladoc = ladoc = readFileSync(path, 'utf-8');
+    }
     this.library = ladoc ? this.parse(ladoc) : this.getBlankLib();
   }
 
-  public parse(ladoc: string): Library {
+  public parse(ladoc?: string): Library {
+    if (!ladoc) ladoc = this.ladoc;
     this.library = this.getBlankLib();
     this.stack = [];
 
-    const lines = ladoc.split(/$/gm)
-      .map(line => line.replace(/[\n\r]/g, ''))
-      .filter((val, i, arr) => {
-        if (val === '') {
-          return arr[i + 1] === '';
-        }
-        else return true;
-      });
+    const lines = this.normalizeLines(ladoc);
 
     let eof = false;
     let markdown = '';
     while (!eof) {
-      const line = lines.shift();
+      console.log('loop');
+      const line = this.nextLine(lines);
       if (line || line === '') {
         if (line.length > 3 && line.substr(0, 3) === '+++') {
           if (line[3]) {
@@ -35,7 +41,7 @@ export default class Parser {
               markdown = '';
             }
             const type = line.substr(3);
-            if (this.stack[this.stack.length - 1] !== type) this.stack.push(type);
+            if (this.stack[this.stack.length - 1] !== type && type !== 'include') this.stack.push(type);
             if (type === 'project') {
               this.library = this.parseAnnotation(lines, this.getBlankLib());
             }
@@ -53,6 +59,11 @@ export default class Parser {
               else {
                 throw new Error("Example declared out of a section");
               }
+            }
+            if (type === 'include') {
+              const include = this.parseAnnotation(lines, this.getBlankInclude());
+              const includedFile = readFileSync(resolve(parse(this.path).dir, include.file + '.ladoc'), 'utf-8');
+              lines.unshift(...this.normalizeLines(includedFile));
             }
           }
         }
@@ -82,15 +93,28 @@ export default class Parser {
       else eof = true;
     }
     if (markdown) this.pushMarkdown(markdown);
+    console.log('exited loop');
+    console.log(this.library);
     return this.library;
   }
 
+  private normalizeLines(text: string) {
+    return text.split(/$/gm)
+      .map(line => line.replace(/[\n\r]/g, ''))
+      .filter((val, i, arr) => {
+        if (val === '') {
+          return arr[i + 1] === '';
+        }
+        else return true;
+      });
+  }
+
   private getFile(lines: string[]) {
-    let curLine = lines.shift();
+    let curLine = this.nextLine(lines);
     let file = '';
     while (curLine !== '```') {
       file += curLine + '\n';
-      curLine = lines.shift();
+      curLine = this.nextLine(lines);
     }
     return file.trim();
   } 
@@ -120,13 +144,18 @@ export default class Parser {
     };
   }
 
+  private nextLine(lines: string[]) {
+    return lines.shift();
+  }
+
   private getBlankLib(): Library {
     return {
       name: "",
       description: "",
       path: this.path,
       sections: [],
-      package: ""
+      package: "",
+      assets: ""
     }
   }
 
@@ -149,11 +178,17 @@ export default class Parser {
     }
   }
 
-  private parseAnnotation<T = Library | Section | Example>(lines: string[], emptyPart: T): T {
+  private getBlankInclude(): Include {
+    return {
+      file: ''
+    }
+  }
+
+  private parseAnnotation<T = Library | Section | Example | Include>(lines: string[], emptyPart: T): T {
     let done = false;
 
     while (!done) {
-      const line = lines.shift();
+      const line = this.nextLine(lines);
       if (line) {
         if (line.trim() === '+++') done = true;
         else {

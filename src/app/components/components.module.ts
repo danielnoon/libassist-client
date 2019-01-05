@@ -19,7 +19,7 @@ const components: any[] = [SidebarComponent, MainComponent, ExampleComponent, Ed
     MaterialComponentsModule,
     CommonModule,
     FormsModule,
-    MarkdownModule,
+    MarkdownModule.forChild(),
     HighlightModule,
     AceModule
   ]

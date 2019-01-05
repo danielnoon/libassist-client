@@ -1,8 +1,6 @@
-// export interface ExampleContents {
-//   type: 'code' | 'small-input' | 'large-input';
-//   value: string;
-//   id?: string;
-// }
+export interface Include {
+  file: string;
+}
 
 export interface ExampleFile {
   path: string;
@@ -14,7 +12,7 @@ export interface Example {
   type: string;
   name: string;
   files: ExampleFile[];
-  ports: [];
+  ports: string[];
   running: boolean;
   template: string;
   path: string;
@@ -34,6 +32,7 @@ export interface Library {
   name: string;
   description: string;
   path: string;
+  assets: string;
   sections: Section[];
   opened?: boolean;
   package: string;

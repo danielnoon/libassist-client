@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import Parser from './parse';
+import Parser from '../parse';
 
 export default function parse(path: string) { 
   const ladoc = readFileSync(path, 'utf-8');

@@ -1,9 +1,12 @@
 import { app, BrowserWindow, ipcMain, Event, Menu, globalShortcut, dialog } from 'electron';
 import { ChildProcess, spawn } from 'child_process';
 import build from './cli';
-import parse from './parser';
+import Parser from './parse';
 import path from 'path';
 import { Example } from "./models/library.model";
+import { ncp } from "ncp";
+import fs from 'fs';
+import Server from "./server";
 
 console.log("Starting!");
 
@@ -18,13 +21,46 @@ let runningExamples: IRunningProcess[] = [];
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
 
+if (!fs.existsSync(path.resolve(getUserDataFolder(), 'LibAssist'))) {
+  fs.mkdir(path.resolve(getUserDataFolder(), 'LibAssist'), err => {
+    err ? console.log("Error creating storage directory!", err) : console.log("Created local storage directory!");
+    if (!fs.existsSync(path.resolve(getUserDataFolder(), 'LibAssist', 'assets'))) {
+      fs.mkdir(path.resolve(getUserDataFolder(), 'LibAssist', 'assets'), err => {
+        err ? console.log("Error creating assets directory!", err) : console.log("Created assets storage directory!");
+      });
+    }
+  });
+}
+else {
+  if (!fs.existsSync(path.resolve(getUserDataFolder(), 'LibAssist', 'assets'))) {
+    fs.mkdir(path.resolve(getUserDataFolder(), 'LibAssist', 'assets'), err => {
+      err ? console.log("Error creating assets directory!", err) : console.log("Created assets storage directory!");
+    });
+  }
+}
+
+function getUserDataFolder() {
+  return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : '/var/local');
+}
+
 function openDoc() {
-  const path = dialog.showOpenDialog({
+  const lapath = dialog.showOpenDialog({
     properties: ['openFile'], filters: [{extensions: ['ladoc'], name: "LibAssist Documentation"}]
   });
-  if (path[0]) {
-    const document = parse(path[0]);
-    win.webContents.send('openLaFile', document);
+  if (lapath[0]) {
+    const parser = new Parser(lapath[0]);
+    const document = parser.parse();
+    if (document.assets) {
+      const localAssetsDir = path.resolve(getUserDataFolder(), 'LibAssist', 'assets', document.package);
+      if (!fs.existsSync(localAssetsDir)) {
+        fs.mkdirSync(localAssetsDir);
+      }
+      ncp(path.parse(lapath[0]).dir + "/" + document.assets, localAssetsDir, err => {
+        err ? console.log("Error copying assets dir: ", err) : console.log("Copied doc assets!");
+        win.webContents.send('openLaFile', document);
+      });
+    }
+    else win.webContents.send('openLaFile', document);
   }
 }
 
@@ -61,17 +97,24 @@ app.on("ready", () => {
       ]
     }
   ]);
+
   globalShortcut.register('CommandOrControl+Shift+I', () => {
     win.webContents.toggleDevTools();
   });
+
   win.setTitle("LibAssist");
+
   Menu.setApplicationMenu(menu);
+
   if (serve) {
     win.loadURL('http://localhost:4200');
   }
   else {
     win.loadFile(__dirname + "/app/index.html");
   }
+
+  const assetServer = new Server(path.resolve(getUserDataFolder(), 'LibAssist', 'assets'), 9949);
+  assetServer.start();
 });
 
 function kill(image: string) {
