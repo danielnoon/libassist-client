@@ -15,12 +15,8 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "customWebpackConfig": {
-              "path": "./webpack.config.js",
-              "replaceDuplicatePlugins": true
-            },
             "outputPath": "dist/app",
             "index": "src/views/index.html",
             "main": "src/app/main.ts",

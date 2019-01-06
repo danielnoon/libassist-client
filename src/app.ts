@@ -115,6 +115,10 @@ app.on("ready", () => {
 
   const assetServer = new Server(path.resolve(getUserDataFolder(), 'LibAssist', 'assets'), 9949);
   assetServer.start();
+
+  win.on('closed', () => {
+    process.exit();
+  });
 });
 
 function kill(image: string) {

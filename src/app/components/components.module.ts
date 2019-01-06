@@ -6,7 +6,6 @@ import { FormsModule } from "@angular/forms";
 import { MainComponent } from "./main/main.component";
 import { MarkdownModule } from "ngx-markdown";
 import { ExampleComponent } from "./example/example.component";
-import { HighlightModule } from "ngx-highlightjs";
 import { EditorComponent } from "./editor/editor.component";
 import { AceModule } from "ngx-ace-wrapper";
 
@@ -20,7 +19,6 @@ const components: any[] = [SidebarComponent, MainComponent, ExampleComponent, Ed
     CommonModule,
     FormsModule,
     MarkdownModule.forChild(),
-    HighlightModule,
     AceModule
   ]
 })
