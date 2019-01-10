@@ -12,7 +12,11 @@ export default class Server {
   }
 
   start() {
-    this.app.use(express.static(this.path));
-    this.app.listen(this.port);
+    return new Promise(resolve => {
+      this.app.use(express.static(this.path));
+      this.app.listen(this.port, () => {
+        resolve();
+      });
+    });
   }
 }

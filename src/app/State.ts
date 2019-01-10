@@ -11,7 +11,9 @@ export class State {
 
   public static Set(item: string, value: any) {
     this[item] = value;
-    this._listeners.filter(listener => listener.item === item).forEach(listener => listener.callback(value));
+    this._listeners
+      .filter(listener => listener.item === item)
+      .forEach(listener => listener.callback(value));
   }
 
   public static Get(item: string) {

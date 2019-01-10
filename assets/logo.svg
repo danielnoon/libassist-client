@@ -2,21 +2,23 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="60mm"
-   height="60mm"
-   viewBox="0 0 60 59.999999"
-   version="1.1"
-   id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="logo.svg">
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        width="60mm"
+        height="60mm"
+        viewBox="0 0 60 59.999999"
+        version="1.1"
+        id="svg8"
+        inkscape:version="0.92.3 (2405546, 2018-03-11)"
+        sodipodi:docname="logo.svg"
+        inkscape:export-filename="C:\Users\delpi\code\libassist-client\assets\logo.png"
+        inkscape:export-xdpi="433.49335"
+        inkscape:export-ydpi="433.49335">
   <defs
      id="defs2">
     <linearGradient
@@ -128,27 +130,27 @@
        r="21.473772" />
   </defs>
   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="1.9758715"
-     inkscape:cx="83.188727"
-     inkscape:cy="29.073205"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     inkscape:window-width="3000"
-     inkscape:window-height="1875"
-     inkscape:window-x="-13"
-     inkscape:window-y="-13"
-     inkscape:window-maximized="1"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+          id="base"
+          pagecolor="#ffffff"
+          bordercolor="#666666"
+          borderopacity="1.0"
+          inkscape:pageopacity="0.0"
+          inkscape:pageshadow="2"
+          inkscape:zoom="0.69857607"
+          inkscape:cx="-732.12679"
+          inkscape:cy="265.5396"
+          inkscape:document-units="mm"
+          inkscape:current-layer="g5016"
+          showgrid="false"
+          inkscape:window-width="3000"
+          inkscape:window-height="1875"
+          inkscape:window-x="-13"
+          inkscape:window-y="-13"
+          inkscape:window-maximized="1"
+          fit-margin-top="0"
+          fit-margin-left="0"
+          fit-margin-right="0"
+          fit-margin-bottom="0"/>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -157,7 +159,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+          <dc:title/>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -182,14 +184,14 @@
          d="m 57.086437,46.437203 c 12.430292,0 26.247139,4.059404 27.337323,8.092561 1.050731,-3.887189 13.233189,-8.092561 27.33733,-8.092561"
          style="fill:none;stroke:#3f51b5;stroke-width:1.84652376;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       <text
-         id="text5000"
-         y="44.339306"
-         x="71.967506"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.78966788;stroke:none;stroke-width:0.26458332"
-         xml:space="preserve"><tspan
+              id="text5000"
+              y="44.339306"
+              x="71.468788"
+              style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.78966788;stroke:none;stroke-width:0.26458332"
+              xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:19.75555611px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code Medium';letter-spacing:2.64583325px;fill:#000000;fill-opacity:0.78966788;stroke-width:0.26458332"
            y="44.339306"
-           x="71.967506"
+           x="71.468788"
            id="tspan4998"
            sodipodi:role="line">LA</tspan></text>
     </g>

@@ -1,7 +1,7 @@
 dist: xenial
 language: node_js
 node_js:
-  - "10"
+  - '10'
 before_install:
   - sudo dpkg --add-architecture i386
   - wget -nc https://dl.winehq.org/wine-builds/winehq.key
@@ -12,10 +12,3 @@ before_install:
 install:
   - npm install
 script: npm run build
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: VZJnziGLOBNgRyrBHZ0qZFPdCqNNuiPKNOH0y7TqkCQ5OsakYVwCbQwyYEODD7gHM9sAiUZe8HkYE+zeq+IBd2LE0vKXG/Fsxc5v8RxL8BdA00PXCtoSb+po/eHnIGroEeCZABW2MyLmy5d2s5XRaRmxHqLASJRL0222DtCfxV8ayqb0TNUjPbnG36XOzcFeDeVXGV/5N318fgdJWecRUf6lUTzu9izYfIOK3BLXcqERHDHIWCZwKswSkce558E0GvuRTk7sNWJKeK7OU23wOEtsydnMLCP54EVCQZAG/XwdHmto+DS9k9eZ3lxYr9vg1y/1NKUhc9xv39Keg/B+AsHHI0QqjNCTDVhS0WSPWcVCnKSufYx+r9JuguLsxzO2UmctRp795wy7ZZ2aKAI+8cSDS8OPkgwYbcNuDHdvgeMUAmhWtRn75PWVTJn/rYnJz7o99J4keM04M+Jj0HRa9eDBXD2CWXwWWSQVlNdcIuqODIyrIFVL8psscB25IXNZ9YgIM/efVpwSpzHUYGkjhB54Qhy6xmuvAoMTqr0djP4S0PuRF/kE/OpsuS1KkVAYhhe3dsHO7df74ba5IsmJ6i6EMMGQdsKrojG+FFIEIJrBWGYyhT546pigZiUlNyVL9Apuo5DfprjpDfq/qJeWirX/ZOmodn+pCyxm4+ZIA+Y=
-#  file: "artifacts/LibAssist Setup *"
-#  on:
-#    repo: Supermegadex/libassist-client

@@ -1,5 +1,14 @@
-import { NgModule } from "@angular/core";
-import { MatButtonModule, MatExpansionModule, MatListModule, MatCardModule, MatInputModule, MatFormFieldModule, MatTabsModule, MatToolbarModule } from '@angular/material';
+import { NgModule } from '@angular/core';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatExpansionModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatListModule,
+  MatTabsModule,
+  MatToolbarModule,
+} from '@angular/material';
 
 const components: any[] = [
   MatButtonModule,
@@ -9,11 +18,11 @@ const components: any[] = [
   MatInputModule,
   MatFormFieldModule,
   MatTabsModule,
-  MatToolbarModule
+  MatToolbarModule,
 ];
 
 @NgModule({
   imports: components,
-  exports: components
+  exports: components,
 })
 export class MaterialComponentsModule {}

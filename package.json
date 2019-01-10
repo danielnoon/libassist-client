@@ -1,6 +1,6 @@
 {
   "name": "libassist",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Library Assistant",
   "productName": "LibAssist",
   "main": "dist/app.js",
@@ -29,8 +29,8 @@
     "tempy": "^0.2.1"
   },
   "devDependencies": {
-    "@angular-devkit/core": "^7.1.3",
     "@angular-devkit/build-angular": "~0.11.0",
+    "@angular-devkit/core": "^7.1.3",
     "@angular/animations": "^7.1.3",
     "@angular/cdk": "^7.1.1",
     "@angular/cli": "~7.1.3",
@@ -59,12 +59,15 @@
     "gulp": "^4.0.0",
     "gulp-typescript": "^5.0.0",
     "hammerjs": "^2.0.8",
+    "husky": "^1.3.1",
     "lodash-es": "^4.17.11",
     "material-design-icons": "^3.0.1",
     "ngx-ace-wrapper": "^7.2.0",
     "ngx-electron": "^1.0.4",
     "ngx-markdown": "^7.0.2",
     "npm-run-all": "^4.1.5",
+    "prettier": "^1.15.3",
+    "pretty-quick": "^1.8.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.3.3",
     "typescript": "3.1.6",
@@ -87,13 +90,15 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
+      ],
+      "icon": "assets/logo.icns"
     },
     "linux": {
       "target": [
         "AppImage",
         "deb"
-      ]
+      ],
+      "icon": "assets/logo.png"
     },
     "win": {
       "target": {
@@ -107,6 +112,11 @@
     },
     "directories": {
       "output": "artifacts"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
     }
   }
 }

@@ -7,9 +7,7 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { NgxElectronModule } from 'ngx-electron';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -20,14 +18,12 @@ import { NgxElectronModule } from 'ngx-electron';
         useValue: {
           tables: true,
           smartypants: true,
-          smartLists: true
-        }
+          smartLists: true,
+        },
       },
     }),
-    NgxElectronModule
+    NgxElectronModule,
   ],
-  bootstrap: [
-    AppComponent
-  ]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

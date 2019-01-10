@@ -39,5 +39,5 @@ export interface Library {
 }
 
 export default interface IState {
-  libs: Library[]
+  libs: Library[];
 }

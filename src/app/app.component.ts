@@ -1,16 +1,16 @@
-import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
-import IState, { Section, Library } from '../models/library.model';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import IState, { Library, Section } from '../models/library.model';
 import { ElectronService } from 'ngx-electron';
-import { State } from "./State";
+import { State } from './State';
 
 @Component({
   selector: 'app-main',
   templateUrl: 'app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   state: IState = {
-    libs: []
+    libs: [],
   };
 
   currentSection: Section;
@@ -18,18 +18,25 @@ export class AppComponent implements OnInit {
   theme: string = 'light-theme';
   workingDir: string = '';
 
-  constructor(private electron: ElectronService, private ref: ChangeDetectorRef, private zone: NgZone) {
+  constructor(
+    private electron: ElectronService,
+    private ref: ChangeDetectorRef,
+    private zone: NgZone
+  ) {
     console.log(this);
   }
 
   ngOnInit() {
-    const theme = (<'dark' | 'light' | undefined>localStorage.getItem('theme'));
+    const theme = <'dark' | 'light' | undefined>localStorage.getItem('theme');
     if (theme) this.changeTheme(theme);
-    this.electron.ipcRenderer.on('changeTheme', (sender: any, theme: 'dark' | 'light') => {
-      this.zone.run(() => {
-        this.changeTheme(theme);
-      });
-    });
+    this.electron.ipcRenderer.on(
+      'changeTheme',
+      (sender: any, theme: 'dark' | 'light') => {
+        this.zone.run(() => {
+          this.changeTheme(theme);
+        });
+      }
+    );
     this.electron.ipcRenderer.on('openLaFile', (sender: any, lib: Library) => {
       this.zone.run(() => {
         this.pushLib(lib);

@@ -1,12 +1,19 @@
 <mat-card class="content-card" *ngIf="section">
-  <h6>{{project.name}}</h6>
-  <mat-card-title>{{section.title}}</mat-card-title>
+  <h6>{{ project.name }}</h6>
+  <mat-card-title>{{ section.title }}</mat-card-title>
   <mat-card-content>
     <div>
       <div *ngFor="let part of section.content">
-        <markdown *ngIf="part.type == 'markdown'" [data]="part.value"></markdown>
+        <markdown
+          *ngIf="part.type == 'markdown'"
+          [data]="part.value"
+        ></markdown>
         <div *ngIf="part.type == 'example'">
-          <app-example [example]="part.value" [project]="project.package" [workingDir]="workingDir"></app-example>
+          <app-example
+            [example]="part.value"
+            [project]="project.package"
+            [workingDir]="workingDir"
+          ></app-example>
         </div>
       </div>
     </div>
@@ -16,6 +23,8 @@
 <div *ngIf="!section" class="section-placeholder">
   <div class="placeholder-inner">
     <h1>LibAssist</h1>
-    <button mat-button color="accent" mat-raised-button (click)="openDoc()">Open</button>
+    <button mat-button color="accent" mat-raised-button (click)="openDoc()">
+      Open
+    </button>
   </div>
 </div>

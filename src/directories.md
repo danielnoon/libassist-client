@@ -1,5 +1,5 @@
 - **app**: Angular application root directory
-- **models**: Typescript interfaces 
+- **models**: Typescript interfaces
 - **parser**: LADoc parser
 - **styles**: Global stylesheets (scss)
 - **templates**: Example templates

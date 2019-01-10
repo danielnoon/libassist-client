@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
-import IState from "../../../models/library.model";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import IState from '../../../models/library.model';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: 'sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent {
   @Input() state: IState;

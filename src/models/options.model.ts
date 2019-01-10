@@ -3,7 +3,7 @@ export interface File {
   Replacements: {
     Id: string;
     Value: string;
-  }[]
+  }[];
 }
 
 interface Options {
