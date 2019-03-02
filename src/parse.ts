@@ -1,15 +1,15 @@
 import {
-  Example,
-  ExampleFile,
-  Include,
-  Library,
-  Section,
+  IExample,
+  IExampleFile,
+  IInclude,
+  ILibrary,
+  ISection,
 } from './models/library.model';
 import { readFileSync } from 'fs';
 import { parse, resolve } from 'path';
 
 export default class Parser {
-  private library: Library;
+  private library: ILibrary;
   private stack: string[] = [];
   private readonly ladoc: string = '';
   private readonly path: string;
@@ -22,7 +22,7 @@ export default class Parser {
     this.library = ladoc ? this.parse(ladoc) : this.getBlankLib();
   }
 
-  public parse(ladoc?: string): Library {
+  public parse(ladoc?: string): ILibrary {
     if (!ladoc) ladoc = this.ladoc;
     this.library = this.getBlankLib();
     this.stack = [];
@@ -88,7 +88,7 @@ export default class Parser {
           if (this.stack[this.stack.length - 1] === 'example') {
             if (line.substring(0, 3) === '```') {
               const meta = line.substring(3).split(':');
-              const file: ExampleFile = {
+              const file: IExampleFile = {
                 path: meta[1],
                 language: meta[0],
                 code: this.getFile(lines),
@@ -96,7 +96,7 @@ export default class Parser {
               console.log(file);
               const sections = this.library.sections;
               const content = sections[sections.length - 1].content;
-              const example: Example = <Example>(
+              const example: IExample = <IExample>(
                 content[content.length - 1].value
               );
               example.files.push(file);
@@ -146,7 +146,7 @@ export default class Parser {
     return lines.shift();
   }
 
-  private getBlankLib(): Library {
+  private getBlankLib(): ILibrary {
     return {
       name: '',
       description: '',
@@ -157,14 +157,14 @@ export default class Parser {
     };
   }
 
-  private getBlankSection(): Section {
+  private getBlankSection(): ISection {
     return {
       title: '',
       content: [],
     };
   }
 
-  private getBlankExample(): Example {
+  private getBlankExample(): IExample {
     return {
       type: '',
       name: '',
@@ -176,13 +176,13 @@ export default class Parser {
     };
   }
 
-  private getBlankInclude(): Include {
+  private getBlankInclude(): IInclude {
     return {
       file: '',
     };
   }
 
-  private parseAnnotation<T = Library | Section | Example | Include>(
+  private parseAnnotation<T = ILibrary | ISection | IExample | IInclude>(
     lines: string[],
     emptyPart: T
   ): T {

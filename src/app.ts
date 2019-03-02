@@ -1,20 +1,14 @@
-import {
-  app,
-  BrowserWindow,
-  dialog,
-  Event,
-  globalShortcut,
-  ipcMain,
-  Menu,
-} from 'electron';
+import { app, BrowserWindow, dialog, Event, ipcMain, Menu } from 'electron';
 import { ChildProcess, spawn } from 'child_process';
-import { Example } from './models/library.model';
+import { IExample } from './models/library.model';
 import { ncp } from 'ncp';
 import Server from './server';
 import Parser from './parse';
 import build from './cli';
 import path from 'path';
 import fs from 'fs';
+import loadDeps from './loadDeps';
+import { sanitizeName } from './utils';
 
 console.log('Starting!');
 
@@ -69,35 +63,27 @@ function getUserDataFolder() {
   );
 }
 
-function openDoc() {
-  const lapath = dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{ extensions: ['ladoc'], name: 'LibAssist Documentation' }],
-  });
-  if (lapath[0]) {
-    const parser = new Parser(lapath[0]);
-    const document = parser.parse();
-    if (document.assets) {
-      const localAssetsDir = path.resolve(
-        getUserDataFolder(),
-        'LibAssist',
-        'assets',
-        document.package
-      );
-      if (!fs.existsSync(localAssetsDir)) {
-        fs.mkdirSync(localAssetsDir);
-      }
-      ncp(
-        path.parse(lapath[0]).dir + '/' + document.assets,
-        localAssetsDir,
-        err => {
-          err
-            ? console.log('Error copying assets dir: ', err)
-            : console.log('Copied doc assets!');
-          win.webContents.send('openLaFile', document);
-        }
-      );
-    } else win.webContents.send('openLaFile', document);
+function openDoc(root: string) {
+  const parser = new Parser(root);
+  const document = parser.parse();
+  if (document.assets) {
+    const localAssetsDir = path.resolve(
+      getUserDataFolder(),
+      'LibAssist',
+      'assets',
+      document.package
+    );
+    if (!fs.existsSync(localAssetsDir)) {
+      fs.mkdirSync(localAssetsDir);
+    }
+    ncp(path.parse(root).dir + '/' + document.assets, localAssetsDir, err => {
+      err
+        ? console.log('Error copying assets dir: ', err)
+        : console.log('Copied doc assets!');
+      win.webContents.send('openLaFile', document);
+    });
+  } else {
+    win.webContents.send('openLaFile', document);
   }
 }
 
@@ -126,10 +112,6 @@ app.on('ready', () => {
 
   win.setTitle('LibAssist');
 
-  globalShortcut.register('CommandOrControl+Shift+I', () => {
-    win.webContents.toggleDevTools();
-  });
-
   win.on('ready-to-show', () => {
     const assetServer = new Server(
       path.resolve(getUserDataFolder(), 'LibAssist', 'assets'),
@@ -151,9 +133,34 @@ function start() {
         {
           label: 'Open',
           click() {
-            openDoc();
+            const root = dialog.showOpenDialog({
+              properties: ['openFile'],
+              filters: [
+                { extensions: ['ladoc'], name: 'LibAssist Documentation' },
+              ],
+            });
+            if (root) {
+              if (root[0]) {
+                openDoc(root[0]);
+              }
+            }
           },
           accelerator: 'CommandOrControl+o',
+        },
+        {
+          label: 'Open Project',
+          click() {
+            const root = dialog.showOpenDialog({
+              properties: ['openDirectory'],
+            });
+            console.log(root);
+            if (root) {
+              if (root[0]) {
+                loadDeps(root[0]);
+              }
+            }
+          },
+          accelerator: 'CommandOrControl+Shift+o',
         },
       ],
     },
@@ -174,6 +181,18 @@ function start() {
         },
       ],
     },
+    {
+      label: 'Debug',
+      submenu: [
+        {
+          label: 'Toggle DevTools',
+          click() {
+            win.webContents.toggleDevTools();
+          },
+          accelerator: 'CommandOrControl+Shift+i',
+        },
+      ],
+    },
   ]);
 
   Menu.setApplicationMenu(menu);
@@ -183,26 +202,52 @@ function start() {
   });
 }
 
-function kill(image: string) {
+async function kill(image: string) {
   const ex = runningExamples.filter(example => example.name === image)[0];
+  console.log('EX!', ex);
   if (ex) {
     if (ex.state >= 2) {
-      const command = `docker rm $(docker stop $(docker ps -a -q --filter ancestor=${image} --format="{{.ID}}"))`;
-      const kill = spawn(command);
-      kill.on('exit', () => console.log('Exited!'));
+      let containerId: string;
+      const getId = spawn('docker', [
+        'ps',
+        '-a',
+        '-q',
+        '--filter',
+        'ancestor=' + image,
+        '--format="{{.ID}}"',
+      ]);
+      getId.stdout.on('data', chunk => {
+        console.log('DOCKER OUTPUT SOMETHING! ', chunk.toString());
+        containerId = chunk.toString().trim();
+      });
+      getId.on('exit', () => {
+        console.log(containerId);
+        const stopper = spawn('docker', [
+          'stop',
+          containerId.substring(1, containerId.length - 1),
+        ]);
+        stopper.on('exit', () => {
+          console.log(`STOPPED CONTAINER ${containerId}`);
+          ex.state = -1;
+          win.webContents.send(`stoppedExample${image}`);
+        });
+        stopper.stdout.on('data', chunk => console.log(chunk.toString()));
+        stopper.stderr.on('data', chunk => console.log(chunk.toString()));
+      });
+    } else {
+      ex.state = -1;
+      win.webContents.send(`stoppedExample${image}`);
     }
-    ex.state = -1;
   }
-  win.webContents.send(`stoppedExample${image}`);
 }
 
 ipcMain.on(
   'runExample',
-  async (event: Event, options: Example, libFile: string, project: string) => {
+  async (event: Event, options: IExample, libFile: string, project: string) => {
     // Create the name of the Docker container which will host the example.
-    const name = `ladoc/${project
-      .toLowerCase()
-      .replace(' ', '-')}-${options.name.toLowerCase().replace(' ', '-')}`;
+    const name =
+      'ladoc/' +
+      sanitizeName(`${project.toLowerCase()}-${options.name.toLowerCase()}`);
 
     // Create an object to hold the state of the Docker process.
     const rp = { state: 0, process: null, name };
@@ -212,33 +257,44 @@ ipcMain.on(
       options.template === 'custom'
         ? path.parse(libFile).dir
         : __dirname + '/templates/' + options.template;
+
     console.log(workingDir);
     console.log(options, workingDir);
     await build(options, workingDir, name);
     if (rp.state === -1) return;
     rp.state++;
+
     console.log(name);
-    win.webContents.send(`exampleBuilt${options.name}${project}`, name);
+    win.webContents.send(
+      sanitizeName(`exampleBuilt${options.name}${project}`),
+      name
+    );
     const ports: string[] = [];
     options.ports.forEach(port => ports.push('-p', port));
-    const exampleProcess = spawn('docker', ['run', ...ports, name]);
+
+    const exampleProcess = spawn('docker', ['run', '--rm', ...ports, name]);
+
     if (rp.state === -1) return;
     rp.state++;
-    console.log('running!');
+
+    console.log(
+      'running `docker run --rm ' + ports.join(' ') + ' ' + name + '`'
+    );
+
     exampleProcess.stdout.on('data', data => {
-      console.log(`stdout: ${data}`);
+      console.log(`stdout: ${data.toString()}`);
       win.webContents.send(
-        `exampleOutput${options.name}${project}`,
-        data,
+        sanitizeName(`exampleOutput${options.name}${project}`),
+        data.toString(),
         options.path,
         true
       );
     });
     exampleProcess.stderr.on('data', data => {
-      console.log(`stderr: ${data}`);
+      console.log(`stderr: ${data.toString()}`);
       win.webContents.send(
-        `exampleOutput${options.name}${project}`,
-        data,
+        sanitizeName(`exampleOutput${options.name}${project}`),
+        data.toString(),
         options.path,
         false
       );
@@ -259,5 +315,13 @@ ipcMain.on('sendStdIn', async (event: Event, name: string, message: string) => {
 });
 
 ipcMain.on('openDoc', () => {
-  openDoc();
+  const root = dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{ extensions: ['ladoc'], name: 'LibAssist Documentation' }],
+  });
+  if (root) {
+    if (root[0]) {
+      openDoc(root[0]);
+    }
+  }
 });

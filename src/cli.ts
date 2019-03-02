@@ -4,7 +4,7 @@ import { ChildProcess, spawn } from 'child_process';
 import * as tempy from 'tempy';
 import { ncp } from 'ncp';
 import * as fs from 'fs';
-import { Example } from './models/library.model';
+import { IExample } from './models/library.model';
 
 function copy(src: string, dest: string) {
   return new Promise((resolve, reject) => {
@@ -20,7 +20,11 @@ function childExit(child: ChildProcess) {
   });
 }
 
-async function build(options: Example, workingDir: string, dockerName: string) {
+async function build(
+  options: IExample,
+  workingDir: string,
+  dockerName: string
+) {
   const p =
     options.template === 'custom'
       ? path.resolve(workingDir, 'examples', options.path)
@@ -32,11 +36,11 @@ async function build(options: Example, workingDir: string, dockerName: string) {
     fs.writeFileSync(path.resolve(tmp, file.path), file.code, 'utf-8');
   }
   const dockerBuild = spawn('docker', ['build', '-t', dockerName, tmp]);
-  dockerBuild.stdout.on('message', data => {
-    console.log(data);
+  dockerBuild.stdout.on('data', data => {
+    console.log(data.toString());
   });
-  dockerBuild.stderr.on('message', data => {
-    console.log(data);
+  dockerBuild.stderr.on('data', data => {
+    console.log(data.toString());
   });
   await childExit(dockerBuild);
   console.log('docker container built!');

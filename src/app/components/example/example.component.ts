@@ -5,24 +5,49 @@ import {
   NgZone,
   QueryList,
   ViewChildren,
+  OnInit,
+  ViewChild,
 } from '@angular/core';
-import { Example } from '../../../models/library.model';
+import { IExample } from '../../../models/library.model';
 import { ElectronService } from 'ngx-electron';
+import { sanitizeName } from '../../../utils';
+import { Terminal } from 'xterm';
+import * as fit from 'xterm/lib/addons/fit/fit';
 
 @Component({
   selector: 'app-example',
   templateUrl: 'example.component.html',
   styleUrls: ['./example.component.scss'],
 })
-export class ExampleComponent {
-  @Input() example: Example;
+export class ExampleComponent implements OnInit {
+  @Input() example: IExample;
   @Input() project: string;
   @Input() workingDir: string;
-  consoleBuffer = '';
   processName = '';
+  terminal = new Terminal();
+  showConsole = false;
   @ViewChildren('editor') editors: QueryList<ElementRef>;
+  @ViewChild('console') console: ElementRef;
 
   constructor(private electron: ElectronService, private zone: NgZone) {}
+
+  ngOnInit() {
+    Terminal.applyAddon(fit);
+
+    this.electron.ipcRenderer.on(
+      sanitizeName(`exampleOutput${this.example.name}${this.project}`),
+      (e: Event, data: string, example: string, ok: boolean) => {
+        console.log(example, ok);
+        this.zone.run(() => {
+          this.terminal.write(data);
+        });
+      }
+    );
+
+    this.terminal.open(this.console.nativeElement);
+    // @ts-ignore
+    this.terminal.fit();
+  }
 
   runExample() {
     if (this.example.running) {
@@ -35,13 +60,13 @@ export class ExampleComponent {
       this.workingDir,
       this.project
     );
-    this.consoleBuffer = 'Building...\n';
+    this.showConsole = true;
 
     this.electron.ipcRenderer.once(
-      `exampleBuilt${this.example.name}${this.project}`,
+      sanitizeName(`exampleBuilt${this.example.name}${this.project}`),
       (e: Event, name: string) => {
         this.processName = name;
-        this.consoleBuffer += `Running ${name}...\n\n`;
+        this.terminal.write(`Running ${name}...\n\n`);
         this.electron.ipcRenderer.once(
           `stoppedExample${this.processName}`,
           () => {
@@ -51,16 +76,6 @@ export class ExampleComponent {
             });
           }
         );
-      }
-    );
-
-    this.electron.ipcRenderer.on(
-      `exampleOutput${this.example.name}${this.project}`,
-      (e: Event, data: string, example: string, ok: boolean) => {
-        console.log(example, ok);
-        this.zone.run(() => {
-          this.consoleBuffer += data;
-        });
       }
     );
 

@@ -1,43 +1,43 @@
-export interface Include {
+export interface IInclude {
   file: string;
 }
 
-export interface ExampleFile {
+export interface IExampleFile {
   path: string;
   language: string;
   code: string;
 }
 
-export interface Example {
+export interface IExample {
   type: string;
   name: string;
-  files: ExampleFile[];
+  files: IExampleFile[];
   ports: string[];
   running: boolean;
   template: string;
   path: string;
 }
 
-export interface ContentPart {
+export interface IContentPart {
   type: 'markdown' | 'example' | 'toc';
-  value: string | string[] | Example;
+  value: string | string[] | IExample;
 }
 
-export interface Section {
+export interface ISection {
   title: string;
-  content: ContentPart[];
+  content: IContentPart[];
 }
 
-export interface Library {
+export interface ILibrary {
   name: string;
   description: string;
   path: string;
   assets: string;
-  sections: Section[];
+  sections: ISection[];
   opened?: boolean;
   package: string;
 }
 
 export default interface IState {
-  libs: Library[];
+  libs: ILibrary[];
 }

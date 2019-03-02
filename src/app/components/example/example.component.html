@@ -23,5 +23,5 @@
       <app-editor [(code)]="file.code" [language]="file.language"></app-editor>
     </mat-tab>
   </mat-tab-group>
-  <div class="console" *ngIf="consoleBuffer">{{ consoleBuffer }}</div>
+  <div class="console" #console></div>
 </div>

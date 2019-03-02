@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
-import IState, { Library, Section } from '../models/library.model';
+import IState, { ILibrary, ISection } from '../models/library.model';
 import { ElectronService } from 'ngx-electron';
 import { State } from './State';
 
@@ -13,8 +13,8 @@ export class AppComponent implements OnInit {
     libs: [],
   };
 
-  currentSection: Section;
-  currentProject: Library;
+  currentSection: ISection;
+  currentProject: ILibrary;
   theme: string = 'light-theme';
   workingDir: string = '';
 
@@ -37,14 +37,14 @@ export class AppComponent implements OnInit {
         });
       }
     );
-    this.electron.ipcRenderer.on('openLaFile', (sender: any, lib: Library) => {
+    this.electron.ipcRenderer.on('openLaFile', (sender: any, lib: ILibrary) => {
       this.zone.run(() => {
         this.pushLib(lib);
       });
     });
   }
 
-  pushLib(lib: Library) {
+  pushLib(lib: ILibrary) {
     let match = -1;
     this.state.libs.forEach((lib_, i) => {
       if (lib_.package === lib.package) {

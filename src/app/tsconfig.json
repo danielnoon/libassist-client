@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
+    "rootDir": "./../../",
     "target": "es5",
     "jsx": "react",
     "allowJs": true,
