@@ -1,6 +1,6 @@
 {
   "name": "libassist",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Library Assistant",
   "productName": "LibAssist",
   "main": "dist/app.js",
@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "hammerjs": "^2.0.8",
     "ncp": "^2.0.0",
     "tempy": "^0.2.1"
   },
