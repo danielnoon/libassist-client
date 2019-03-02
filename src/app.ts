@@ -149,14 +149,14 @@ function start() {
         },
         {
           label: 'Open Project',
-          click() {
+          async click() {
             const root = dialog.showOpenDialog({
               properties: ['openDirectory'],
             });
             console.log(root);
             if (root) {
               if (root[0]) {
-                loadDeps(root[0]);
+                (await loadDeps(root[0])).forEach(openDoc);
               }
             }
           },

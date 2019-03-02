@@ -6,6 +6,7 @@
     rel="stylesheet"
     href="https://fonts.googleapis.com/icon?family=Material+Icons"
   />
+  <base target="_blank" />
 </head>
 
 <body>
@@ -14,4 +15,17 @@
     >Please enable JavaScript to view this. Not sure why or how it would be
     disabled, though.
   </noscript>
+  <script>
+    const shell = require('electron').shell;
+
+    document.addEventListener('click', event => {
+      if (
+        event.target.tagName === 'A' &&
+        event.target.href.startsWith('http')
+      ) {
+        event.preventDefault();
+        shell.openExternal(event.target.href);
+      }
+    });
+  </script>
 </body>

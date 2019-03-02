@@ -1,7 +1,14 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import {
+  Component,
+  NgZone,
+  OnInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import IState, { ILibrary, ISection } from '../models/library.model';
 import { ElectronService } from 'ngx-electron';
 import { State } from './State';
+import { MainComponent } from './components/main/main.component';
 
 @Component({
   selector: 'app-main',
@@ -17,12 +24,9 @@ export class AppComponent implements OnInit {
   currentProject: ILibrary;
   theme: string = 'light-theme';
   workingDir: string = '';
+  @ViewChild('main') main: MainComponent;
 
-  constructor(
-    private electron: ElectronService,
-    private ref: ChangeDetectorRef,
-    private zone: NgZone
-  ) {
+  constructor(private electron: ElectronService, private zone: NgZone) {
     console.log(this);
   }
 
@@ -66,5 +70,7 @@ export class AppComponent implements OnInit {
     this.currentProject = this.state.libs[selection[0]];
     this.currentSection = this.state.libs[selection[0]].sections[selection[1]];
     this.workingDir = this.state.libs[selection[0]].path;
+    console.log(this.main);
+    this.main.element.nativeElement.scroll(0, 0);
   }
 }

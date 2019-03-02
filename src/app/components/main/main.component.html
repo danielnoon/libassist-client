@@ -1,24 +1,26 @@
-<mat-card class="content-card" *ngIf="section">
-  <h6>{{ project.name }}</h6>
-  <mat-card-title>{{ section.title }}</mat-card-title>
-  <mat-card-content>
-    <div>
-      <div *ngFor="let part of section.content">
-        <markdown
-          *ngIf="part.type == 'markdown'"
-          [data]="part.value"
-        ></markdown>
-        <div *ngIf="part.type == 'example'">
-          <app-example
-            [example]="part.value"
-            [project]="project.package"
-            [workingDir]="workingDir"
-          ></app-example>
+<div class="wrapper" *ngIf="section">
+  <mat-card class="content-card">
+    <h6>{{ project.name }}</h6>
+    <mat-card-title>{{ section.title }}</mat-card-title>
+    <mat-card-content>
+      <div>
+        <div *ngFor="let part of section.content">
+          <markdown
+            *ngIf="part.type == 'markdown'"
+            [data]="part.value"
+          ></markdown>
+          <div *ngIf="part.type == 'example'">
+            <app-example
+              [example]="part.value"
+              [project]="project.package"
+              [workingDir]="workingDir"
+            ></app-example>
+          </div>
         </div>
       </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>
 
 <div *ngIf="!section" class="section-placeholder">
   <div class="placeholder-inner">

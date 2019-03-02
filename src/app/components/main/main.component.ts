@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ElementRef } from '@angular/core';
 import { ILibrary, ISection } from '../../../models/library.model';
 import { ElectronService } from 'ngx-electron';
 import { MarkdownService } from 'ngx-markdown';
@@ -15,7 +15,8 @@ export class MainComponent implements OnInit {
 
   constructor(
     private electron: ElectronService,
-    private marked: MarkdownService
+    private marked: MarkdownService,
+    public element: ElementRef
   ) {}
 
   openDoc() {
@@ -36,5 +37,8 @@ export class MainComponent implements OnInit {
           : `http://localhost:9949/${this.project.package}/${src}`
       }" alt="${content}" title="${title}">
     `;
+
+    this.marked.renderer.paragraph = text =>
+      `<p class="mat-body-1">${text}</p>`;
   }
 }
