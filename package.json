@@ -1,6 +1,6 @@
 {
   "name": "libassist",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Library Assistant",
   "productName": "LibAssist",
   "main": "dist/app.js",
