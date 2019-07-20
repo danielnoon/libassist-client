@@ -18,6 +18,7 @@
     "build:electron": "gulp",
     "build:ng": "ng build --prod",
     "pack-linux": "build -wl",
+    "pack-windows": "build -w",
     "pack-mac": "build -m"
   },
   "author": "Daniel Noon <delpinothedragon1@hotmail.com> (https://supermegadex.net)",
